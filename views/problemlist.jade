@@ -1,0 +1,74 @@
+fieldset
+  .block.block-info
+    .heading
+      .row
+        .col-sm-6
+          .btn-group.btn-group-sm
+            - for (var i = 1; i <= n; i++)
+              a.btn.btn-default(href="/problem/list?page="+i)= i
+        .col-sm-6.form-inline
+          .pull-right
+            .input-group.input-group-sm
+              span.input-group-addon
+                i.icon_search
+              input#search.form-control(type="text" value=search ? search : "" placeholder="title or tag or source")
+            = ' '
+            a#fil.btn.btn-default.btn-sm(href="javascript:;") Filter
+            = ' '
+            a.btn.btn-default.btn-sm(href="/problem/list") Reset
+    .table-responsive
+      table#problemset.table.table-bordered
+        thead
+          tr.even
+            th(style="width:65px;") #
+            th Title
+            th(style="width:75px;")
+            th(style="width:150px;") Source
+            th(style="width:150px;") Ratio(AC/submit)
+        tbody
+          if (!problems || problems.length == 0)
+            tr.odd
+              td.error-text.center(colspan="5") No Problems are matched.
+          else
+            each p, i in problems
+              - var c, s;
+              if (i % 2 == 1)
+                - c = 'even';
+              else
+                - c = 'odd';
+              case R[p.problemID]
+                when 1
+                  - s = 'WA';
+                when 2
+                  - s = 'AC';
+                default
+                  - s = '';
+              tr(class=c)
+                td(class="center "+s)= p.problemID
+                td
+                  if (p.tags && p.tags.length > 0)
+                    .table-tab.prob-tag
+                      each t, i in p.tags.sort(function(a, b){return a-b;})
+                        if (i > 0)
+                          | ,&nbsp;
+                        a.tag(href="javascript:;" title=Pt[t])= Tag[t]
+                  a(href="/problem?pid="+p.problemID)= p.title
+                td(class=s ? s+"-fill" : "")
+                  a#gotosubmit.submit.checklogin.img_link(href="javascript:;" pid=p.problemID title="Submit")
+                td.ellipsis
+                  a.tag(href="javascript:;" style="font-size:12px;" title=p.source)= p.source
+                - var res = '0.00';
+                if (p.submit > 0)
+                  - res = (p.AC/p.submit*100).toFixed(2);
+                td.center
+                  | #{res}% (
+                  a(href="/status?pid="+p.problemID+"&result=2")= p.AC
+                  | /
+                  a(href="/status?pid="+p.problemID)= p.submit
+                  | )
+        tfoot
+          tr
+            td(colspan="6")
+              #pager
+                include pager
+                +pager(page, n)

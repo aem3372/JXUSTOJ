@@ -1,0 +1,73 @@
+fieldset#standings(cid=cid ? cid : "")
+  .block.block-info
+    .heading
+      .row
+        .col-sm-3
+          if (cid)
+            | Contestants of Contest
+            = ' '+cid
+          else
+            | Standings
+        .col-sm-9.form-inline
+          .pull-right
+            .input-group.input-group-sm
+              span.input-group-addon
+                i.icon_search
+              input#search.form-control(type="text" value=search ? search : "" placeholder="user or nick")
+            = ' '
+            a#fil.btn.btn-default.btn-sm(href="javascript:;") Filter
+            = ' '
+            a.btn.btn-default.btn-sm(href="/standings"+(cid ? "?cid="+cid : "")) Reset
+    .table-responsive
+      table#rank.table.table-bordered.tdcenter
+        thead
+          tr.even
+            th(style="width:60px;") Rank
+            th(style="width:155px;") User
+            th(style="width:155px;") Nickname
+            th Signature
+            th(style="width:35px;")
+              span(title="Number of participations") #
+            th(style="width:70px;")
+              span(title="Rating") =
+        tbody
+          if (!users || users.length == 0)
+            tr.odd
+              td.error-text.center(colspan="6") No Users are matched.
+          else
+            - var d = 1;
+            if (user)
+              if (user.rank < (page-1)*pageNum+1)
+                - users.unshift(user);
+                - d = 0;
+              else if (user.rank > (page-1)*pageNum+users.length)
+                - users.push(user);
+            each p, i in users
+              - var c, h = '';
+              if (i % 2 == 1)
+                - c = 'even';
+              else
+                - c = 'odd';
+              if (user && user.name == p.name)
+                - h = ' highlight';
+              tr(class=c+" "+h)
+                td= p.rank ? p.rank : (page-1)*pageNum+i+d
+                td
+                  a(class="user user-"+UC[p.name] href="/user/"+p.name title=UT[p.name]+" "+p.name)= p.name
+                td
+                  span.user-gray= p.nick
+                td.ellipsis
+                  if (p.signature)
+                    p.user-gray.ellipsis.mc(title=p.signature)= p.signature
+                td= p.ratedRecord.length
+                td
+                  if (p.lastRatedContest)
+                    = p.rating
+                  else
+                    span.user.user-gray -
+        tfoot
+          tr.odd
+            td(colspan="6")
+              #pager
+                include pager
+                +pager(page, n)

@@ -1,0 +1,112 @@
+fieldset
+  .block.block-info
+    .heading
+      .row
+        .col-sm-2
+          if (type === 1)
+            | DIY Contest
+          else if (type === 2)
+            case family
+              when "rating"
+                | Rating Contest
+              when "speed"
+                | Speed Contest
+              when "training"
+                | Traning Contest
+              default
+                | VIP Contest
+        .col-sm-10.form-inline
+          .pull-right
+            if (user)
+              a.btn.btn-default.btn-sm(href="/addcontest?type="+type+(family?"&family="+family:"")) Add Contest
+            else
+              a#addcontest.btn.btn-default.btn-sm.checklogin(href="javascript:;") Add Contest
+            = ' '
+            .input-group.input-group-sm
+              span.input-group-addon
+                i.icon_search
+              input#search.form-control(type="text" value=search ? search : "" placeholder="title or manager")
+            = ' '
+            a#fil.btn.btn-default.btn-sm(href="javascript:;") Filter
+            = ' '
+            a.btn.btn-default.btn-sm(href="/contest/list?type="+type+(family?"&family="+family:"")) Reset
+    .table-responsive
+      table#contest.table.table-bordered.tdcenter
+        thead
+          tr.even
+            th(style="width:65px;") #
+            th Title
+            th(style="width:180px;") Start Time
+            th(style="width:100px;") Duration
+            th(style="width:100px;") Type
+            th(style="width:125px;")= (type === 2 ? '' : 'Manager')
+        tbody
+          if (!contests || contests.length == 0)
+            tr.odd
+              td.error-text(colspan="6") No Contests are matched.
+          else
+            each p, i in contests
+              - var c, dd, hh, mm, s;
+              if (i % 2 == 1)
+                - c = 'even';
+              else
+                - c = 'odd';
+              - dd = parseInt(p.len/1440, 10); hh = parseInt(p.len%1440/60, 10); mm = p.len%1440%60;
+              - if (hh < 10) hh = '0'+hh;
+              - if (mm < 10) mm = '0'+mm;
+              if (T[i] > 0)
+                - s = '';
+              else if (T[i] + p.len*60000 > 0)
+                - s = 'progress-bar-danger';
+              else
+                - s = 'progress-bar-success';
+              tr(class=c)
+                td= p.contestID
+                td(style="text-align:left;")
+                  if (type != 2 && p.password && (!user || (user.name != p.userName && user.name != 'admin')) && !CS[p.contestID])
+                    a.cid(href="javascript:;" id=p.contestID)= p.title
+                  else
+                    a(href="/contest?cid="+p.contestID)= p.title
+                  if (type == 2)
+                    .table-tab
+                      if (s || user && user.name == 'admin')
+                        a.standings(href="/contest?cid="+p.contestID+"#rank" title="查看排名") Standings
+                      else 
+                        if (R[i])
+                          span.user.user-green Registration Completed
+                        else
+                          if (p.password)
+                            span.user.user-gray Not Registered
+                          else
+                            - T[i] -= 300000;
+                            if (T[i] < 0)
+                              span.user-gray Registration Closed
+                            else
+                              - T[i] /= 1000;
+                              | Until Closed:&nbsp;
+                              span.user-gray(style="margin-right:20px;")
+                              a.register(href="javascript:;" id=p.contestID left=T[i] title="点击注册")= "Register >>"
+                td= getDate(p.startTime)
+                  .progress
+                    .progress-bar.progress-bar-striped.active(class=s style="width:100%;")
+                td
+                  if (dd > 0)
+                    | #{dd}天
+                  | #{hh}:#{mm}:00
+                td
+                  if (p.password)
+                    span.user-green Private
+                  else
+                    span.user-blue Public
+                td
+                  if (type == 2)
+                    img(src="/img/user.png")
+                    a(href="/standings?cid="+p.contestID) ×#{p.contestants.length}
+                  else
+                    a(class="user user-"+UC[p.userName] title=UT[p.userName] href="/user/"+p.userName)= p.userName
+        tfoot
+          tr.odd
+            td(colspan="6")
+              #pager
+                include pager
+                +pager(page, n)

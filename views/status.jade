@@ -1,0 +1,93 @@
+fieldset
+  .block.block-info
+    .heading
+      .row
+        .col-sm-2 Status
+        .col-sm-10.form-inline
+          .pull-right
+            .input-group.input-group-sm
+              span.input-group-addon name
+              input#name.form-control(type="text" value=name ? name : "" placeholder="UserName")
+            = ' '
+            .input-group.input-group-sm
+              span.input-group-addon pid
+              input#pid.form-control(type="text" value=pid ? pid : "" placeholder="ProblemID")
+            = ' '
+            .input-group.input-group-sm
+              span.input-group-addon lang
+              select#lang.form-control
+                each name, i in langs
+                  option(value=i selected=(lang == i ? true : false))= name
+            = ' '
+            .input-group.input-group-sm
+              span.input-group-addon verdict
+              select#result.form-control
+                option(value="") All
+                each p in [0, 1, 2, 6, 3, 4, 5, 7, 8, 9, 13, 14]
+                  option(class=Col(p) value=p selected=result == p ? true : false)= Res(p)
+            = ' '
+            a#fil.btn.btn-default.btn-sm(href="javascript:;") Filter
+            = ' '
+            a.btn.btn-default.btn-sm(href="/status") Reset
+    .table-responsive
+      table#statustable.table.table-bordered.tdcenter
+        thead
+          tr.even
+            th(style="width:7%;") RunID
+            th(style="width:14%;") User
+            th(style="width:10%;") Problem
+            th Verdict
+            th(style="width:9%;") Time
+            th(style="width:9%;") Memory
+            th(style="width:8%;") Lang
+            th(style="width:8%;") Length
+            th(style="width:15%;") Submit Time
+        tbody
+          if (!sols || sols.length == 0)
+            tr.odd
+              td.error-text.center(colspan="9") No Status are matched.
+          else
+            each p, i in sols
+              - var c, v, vc = '', time, memory, len;
+              if (user && user.name == p.userName)
+                - c = 'highlight';
+              else if (i % 2 == 1)
+                - c = 'even';
+              else
+                - c = 'odd';
+              if (p.result < 2)
+                - vc = 'unknow';
+              if ((p.cID != -1 || P[p.problemID].hide) && (!user || (user.name != p.userName && user.name != 'admin' && user.name != P[p.problemID].manager)))
+                - time = memory = len = '<span class="user user-gray">---</span>';
+              else
+                - time = p.time+' MS'; memory = p.memory+' KB'; len = p.code.length+' B';
+              if (p.result == 0)
+                - time = '<img src="img/pending.gif" style="width:16px;height:16px;">';
+              else if (p.result == 1)
+                - time = '<img src="img/running.gif" style="width:16px;height:16px;">';
+              if (p.result == 8 && user && (user.name == p.userName || user.name == 'admin'))
+                - v = '<a href="javascript:;" title="more information" rid="'+p.runID+'" class="CE special-text">Compilation Error</a>';
+              else
+                - v = R[i];
+              tr(class=c)
+                td= p.runID
+                td
+                  a(class="user user-"+UC[p.userName] title=UT[p.userName]+" "+p.userName href="/user/"+p.userName)= p.userName
+                td
+                  a(href="/problem?pid="+p.problemID)= p.problemID
+                td(class="bold "+vc+" "+C[i] rid=p.runID)!= v
+                  if (user && user.name == 'admin' && p.result > 2)
+                    div(style="position:relative;")
+                      a.rejudge.img_link(href="javascript:;" title="rejudge")
+                td!= time
+                td!= memory
+                td
+                  a(href="/sourcecode/"+p.runID)= langs[p.language] ? langs[p.language] : ''
+                td!= len
+                td!= getDate(p.inDate)
+        tfoot
+          tr.odd
+            td(colspan="9")
+              #pager
+                include pager
+                +pager(page, n)

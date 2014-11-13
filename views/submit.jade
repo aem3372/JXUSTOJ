@@ -1,0 +1,27 @@
+fieldset
+  .block.block-success
+    .block-content
+      .heading Submit
+      .block-container.form-horizontal
+        .form-group.form-group-sm
+          label.col-sm-2.control-label(for="pid") Problem
+          .col-sm-10.form-inline
+            input#pid.form-control(type="search" value=id)
+            = ' '
+            span#error.error-text
+        .form-group.form-group-sm
+          label.col-sm-2.control-label(for="lang") Language
+          .col-sm-10.form-inline
+            include lang
+            +lang(langs, null)
+        .form-group
+          label.col-sm-2.control-label(for="code") Source Code
+          .col-sm-7
+            textarea#code.form-control(rows="25")
+        #alert.form-group(style="display:none;")
+          .col-sm-offset-2.col-sm-7
+            .alert.alert-warning(style="margin-bottom:0;")
+              include i64_info
+        .form-group
+          .col-sm-offset-2.col-sm-7
+            a#submit.btn.btn-default(href="javascript:;") Submit

@@ -1,0 +1,69 @@
+fieldset#ranklist
+  .block.block-info
+    .heading
+      .row
+        .col-sm-2
+            | Ranklist
+        .col-sm-10.form-inline
+          .pull-right
+            .input-group.input-group-sm
+              span.input-group-addon
+                i.icon_search
+              input#search.form-control(type="text" value=search ? search : "" placeholder="user or nick")
+            = ' '
+            a#fil.btn.btn-default.btn-sm(href="javascript:;") Filter
+            = ' '
+            a.btn.btn-default.btn-sm(href="/ranklist") Reset
+    .table-responsive
+      table#rank.table.table-bordered.tdcenter
+        thead
+          tr.even
+            th(style="width:60px;") Rank
+            th(style="width:155px;") User
+            th(style="width:155px;") Nickname
+            th Signature
+            th(style="width:70px;") Solved
+            th(style="width:70px;") Submit
+            th(style="width:70px;") AC_Ratio
+        tbody
+          if (!users || users.length == 0)
+            tr.odd
+              td.error-text.center(colspan="7") No Users are matched.
+          else
+            - var d = 1;
+            if (user)
+              if (user.rank < (page-1)*pageNum+1)
+                - users.unshift(user);
+                - d = 0;
+              else if (user.rank > (page-1)*pageNum+users.length)
+                - users.push(user);
+            each p, i in users
+              - var c, h = '';
+              if (i % 2 == 1)
+                - c = 'even';
+              else
+                - c = 'odd';
+              if (user && user.name == p.name)
+                - h = ' highlight';
+              - p.ratio = p.submit ? Math.round(p.solved*10000/p.submit)/100. : 0
+              tr(class=c+h)
+                td= p.rank ? p.rank : (page-1)*pageNum+i+d
+                td
+                  a(class="user user-"+UC[p.name] href="/user/"+p.name title=UT[p.name]+" "+p.name)= p.name
+                td
+                  span.user.user-gray= p.nick
+                td.ellipsis
+                  if (p.signature)
+                    p.user-gray.ellipsis.mc(title=p.signature)= p.signature
+                td
+                  a(href="/status?name="+p.name+"&result=2")= p.solved
+                td
+                  a(href="/status?name="+p.name)= p.submit
+                td
+                  span.user-gray= p.ratio+'%'
+        tfoot
+          tr.odd
+            td(colspan="7")
+              #pager
+                include pager
+                +pager(page, n)
