@@ -16,18 +16,21 @@ mixin dropdown
 doctype HTML
 html
   head
+    != '<!--[if lt IE 8]>'
+    != '<script type="text/javascript">window.location="/notsupported";</script>'
+    != '<![endif]-->'
     meta(charset="utf-8")
     meta(http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=edge; chrome=1")
-    meta(name="description" content="ACdream. Programming competitions and contests, programming community")
-    meta(name="keywords" content="ACdream OnlineJudge OJ ACM ICPC Contest online judge programming")
+    meta(name="description" content="Jxust. Programming competitions and contests, programming community")
+    meta(name="keywords" content="Jxust OnlineJudge OJ ACM ICPC Contest online judge programming")
     meta(name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no")
     title#title= title
     link(href="/bootstrap/bootstrap.css" rel="stylesheet" type="text/css")
     link(href="/css/base.css" rel="stylesheet" type="text/css")
     link(href="/css/style.css" rel="stylesheet" type="text/css")
-    if (key == KEY.PROBLEM || key == KEY.SOURCE_CODE || key == KEY.TOPIC)
+    if (key === KEY.PROBLEM || key === KEY.SOURCE_CODE || key === KEY.TOPIC)
       link(rel="stylesheet" type="text/css" href="/highlighter/styles/shCoreEclipse.css")
-    else if (key == KEY.ADD_CONTEST)
+    else if (key === KEY.ADD_CONTEST)
       link(rel="stylesheet" type="text/css" href="/zd/css/zebra_datepicker.css")
     != '<!--[if lt IE 9]>'
     != '<script src="/plugins/html5shiv.js"></script>'
@@ -41,7 +44,7 @@ html
           button.navbar-toggle.collapsed(type="button" data-toggle="collapse" data-target="#bs-navbar-collapse-1")
             span.sr-only Toggle navigation
             span.icon-bar
-          a.navbar-brand(href="/" title="ACdream Online Judge")
+          a.navbar-brand(href="/" title="Jxust Online Judge")
             img(alt="brand" src="/img/brand.jpg")
         div.collapse.navbar-collapse#bs-navbar-collapse-1
           marquee.navbar-text.user-green(style="width:50%" onmouseout="this.start()" onmouseover="this.stop()" scrollamount="2" scrolldelay="1" behavior="alternate")= stc[Math.floor(Math.random()*stc.length)]
@@ -56,25 +59,22 @@ html
                 a(href="/user/"+user.name)
                   img(alt="avatar" src=img)
                   = user.name
-              if (user.addprob == 1)
-                if (key == ADD_PROBLEM)
-                  li.active Add Problem
-                else
-                  li
-                    a(href="/addproblem") Add Problem
+              if (user.addprob)
+                li
+                  a(href="/addproblem") Add Problem
               li
                 a#logout(href="javascript:;") Logout
             else
               li
-                a#login(href="javascript:;") Enter
+                a.checklogin(href="javascript:;" data-url=(key === KEY.REGISTER ? "/" : "")) Enter
               li
                 a(href="/register") Register
     div(style="width:100%;background:#CFF0FF;")
       div.container#preload_logo
         .row
           .col-md-8
-            a.logo(href="/" title="ACdream Online Judge" style="opacity:.8;")
-              img.img-responsive(src="/img/logo.png" alt="ACdream Online Judge" style="margin-top:28px;")
+            a.logo(href="/" title="Jxust Online Judge" style="opacity:.8;")
+              img.img-responsive(src="/img/logo.png" alt="Jxust Online Judge" style="margin-top:28px;")
           .col-md-4
               span.fr
                 img.img-responsive(src="/img/qrcode.jpg" alt="qrcode" title="微信扫一扫关注我")
@@ -103,20 +103,17 @@ html
       != body
     #footer
       .container
-        h4 ACdream
+        h4 Jxust
         .row
           .col-sm-2
-            a(target="_blank" href="https://github.com/KIDx/ACdream") Current Version v2.0.0
+            a(target="_blank" href="https://github.com/aem3372/JXUSTOJ.git") Current Version v2.0.0
           .col-sm-5
-            span= 'Copyright © 2013-2014 ACdream Team. All Rights Reserved.'
+            span= 'Copyright © 2013-2014 ACdream Team & aem3372. All Rights Reserved.'
           .col-sm-2
             span= 'Loaded in ' + ((new Date()).getTime() - time) + 'ms.'
-          .col-sm-2
-            span
-              a(href="http://www.miitbeian.gov.cn/") 浙ICP备14013846号
         div
           span= 'Designer and Developer : '
-            a(target="_blank" href="https://github.com/KIDx/ACdream") KIDx
+            a(target="_blank" href="&aem3372") KIDx & aem3372
         div
           span= 'Server time : '
             span#timer
@@ -188,13 +185,13 @@ html
       when KEY.CONTEST
         script(src="/plugins/jquery.hashchange.js")
         script(src="/js/updatestatus.js")
-        if (user && user.name == 'admin')
+        if (user && user.name === 'admin')
           script(src="/js/singleRejudge.js")
         script(src="/socket.io/socket.io.js")
         script(src="/js/contest.js")
       when KEY.STATUS
         script(src="/js/updatestatus.js")
-        if (user && user.name == 'admin')
+        if (user && user.name === 'admin')
           script(src="/js/singleRejudge.js")
         script(src="/js/status.js")
       when KEY.SUBMIT

@@ -1,4 +1,4 @@
-# ACdream Online Judge v1.5.3
+# Jxust Online Judge v1.0.0
 
 ## 关于pull request
 
@@ -29,7 +29,7 @@ http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
 
 ### 数据库初始化
 ```
-$ cd ACdream
+$ cd JXUSTOJ
 $ mongorestore -h localhost -d acdream_db --directoryperdb acdream_db -drop
 ```
 
@@ -40,13 +40,13 @@ $ sudo npm i -g grunt-cli
 
 ### 安装依赖模块
 ```
-$ cd ACdream
+$ cd JXUSTOJ
 $ sudo npm i
 ```
 
 ### 运行app
 ```
-$ cd ACdream
+$ cd JXUSTOJ
 $ grunt
 $ node app.js
 ```
@@ -54,7 +54,7 @@ $ node app.js
 ###License
 The MIT License (MIT)
 
-Copyright (c) 2013-2014 ACdream
+Copyright (c) 2013-2014 ACdream, Aem3372
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
