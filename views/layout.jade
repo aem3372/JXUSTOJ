@@ -6,7 +6,7 @@ include post_list
 mixin dropdown
   li.dropdown
     a.dropdown-toggle(href="javascript:;" data-toggle="dropdown")= '标准比赛 '
-      span.caret
+        span.caret
     ul.dropdown-menu(role="menu")
       each url, i in contesturl
         if (i > 0)
@@ -61,14 +61,14 @@ html
                   = user.name
               if (user.addprob)
                 li
-                  a(href="/addproblem") Add Problem
+                  a(href="/addproblem") 添加题目
               li
-                a#logout(href="javascript:;") Logout
+                a#logout(href="javascript:;") 登出
             else
               li
-                a.checklogin(href="javascript:;" data-url=(key === KEY.REGISTER ? "/" : "")) Enter
+                a.checklogin(href="javascript:;" data-url=(key === KEY.REGISTER ? "/" : "")) 登录
               li
-                a(href="/register") Register
+                a(href="/register") 注册
     div(style="width:100%;background:#52B8CB;")
       div.container#preload_logo
         .row
@@ -109,7 +109,7 @@ html
             .col-sm-2
               a(target="_blank" href="https://github.com/aem3372/JXUSTOJ.git") Current Version v1.0.0
             .col-sm-6
-              span= 'Designer and Developer : KIDx & aem3372'
+              span= 'Designer and Developer : KIDx & Aem3372'
             != '<!--Loaded in ' + ((new Date()).getTime() - time) + 'ms.-->'
           div
             .pull-right

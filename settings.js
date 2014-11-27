@@ -46,7 +46,7 @@ module.exports = {
   data_path: __dirname + '/data/',
   T: Tag,
   P: ProTil,
-  languages: ['All', 'C', 'C++'], //, 'Java'],
+  languages: ['All', 'C', 'C++', 'Java'],
   xss_options: {
     whiteList: {
       a: ['target', 'href', 'title', 'id', 'name'],
